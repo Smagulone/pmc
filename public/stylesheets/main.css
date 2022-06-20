@@ -1,0 +1,107 @@
+body {
+  background-image: url('../EVdpVvQ.jpg');
+}
+
+.auth__block {
+  background-color: #ffb10a;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+
+}
+
+
+.logo {
+  max-width: 250px;
+  height: auto;
+}
+.profile__content {
+  background-color: #ffb10a;
+  border-radius: 15px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+  margin: 30px 20px;
+  padding: 20px 20px;
+  height: fit-content;
+}
+
+.profile__info, .group__block, .student__block {
+  background-color: #ffb10a;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+}
+
+.test__block {
+  background-color: #ffb10a;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+}
+
+.students__content, .tests__content {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 30px auto;
+  background-color: #a070ca;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+}
+
+.review__content {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 30px auto;
+  background-color: #a8a586;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+
+}
+
+.subjects__content {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 30px auto;
+  background-color: #558379;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+}
+
+.groups__content {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 30px auto;
+  background-color: #558379;;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+}
+
+.records_content {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0px auto;
+  background-color: #ffffff;
+  border-radius: 0px 0px 15px 15px ;
+  box-shadow: 0 1px 10px rgb(0 0 0 / 25%);
+  padding-bottom: 15px;
+
+}
+
+.hide {
+  display: none;
+}
+
+.bi-clipboard-check:active {
+  background-color: green;
+}

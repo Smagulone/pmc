@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+</head>
+
+<body>
+
+<%- include ("../partials/nav.ejs") %>
+
+<div class="container">
+  <div class="row d-flex profile__content">
+    <div class="col-sm">
+      <div class="user__info">
+        <h2>Информация о профиле</h2>
+        <h4>ФИО сотрудника: <%= user.username%></h4>
+        <% if(user.role == 'admin' ){ %>
+          <h4>Роль: Администратор системы</h4>
+          <% } else if(user.role == 'assistant') { %>
+            <h4>Роль: Ассистент</h4>
+          <% } else if(user.role == 'trainer') { %>  
+            <h4>Роль: Тренер</h4>
+            <% } else if(user.role == 'manager') { %>  
+              <h4>
+               Роль: Специалист отдела продаж и клиентского сервиса
+                </h4>          
+            <% } %>
+      </div>
+    </div>
+  </div>
+
+    <div class="flex-column-reverse flex-md-column-reverse flex-lg-row rounded bg-warning p-2 shadow">
+      <div class="col mx-3 my-2">
+        <h4 class="text-center">Фильтр групп</h4>
+        <div class="search_group_block d-flex flex-column rounded bg-primary mt-3 p-3">
+          <div class="search_input_fields">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Название</span>
+              <input id="group_name" type="text" class="form-control" placeholder="" aria-label="Groupname">
+            </div>
+  
+            <div class="input-group mb-3">
+              <span class="input-group-text">Класс</span>
+              <input id="group_class_number" type="number" class="form-control" placeholder="" min="1" max="11" aria-label="Groupclassnumber">
+            </div>
+  
+            <div class="input-group mb-3">
+              <select id="group_branch_select" class="form-select">
+                <option>Филиал</option>
+                <option>Нурсая</option>
+                <option>Рахат</option>
+                <option>Online</option>
+              </select>
+            </div>
+  
+            <div class="input-group mb-3">
+              <select id="group_lang_select" class="form-select">
+                <option>Язык обучения</option>
+                <option>Казахский</option>
+                <option>Русский</option>
+              </select>
+            </div>
+  
+            <div class="input-group mb-3">
+              <select id="group_active_select" class="form-select">
+                <option>В работе?</option>
+                <option>Активна</option>
+                <option>Закрыта</option>
+              </select>
+            </div>
+  
+            <button id="group_find_submit" type="submit" class="btn btn-warning">Найти</button>
+            <button id="hide_results" onclick="hideResults()" class="btn btn-light m-2 hide">Свернуть результаты</button>
+  
+          </div>
+          <div style="max-height: 400px;overflow-y: scroll;" class="search_results_block my-2 p-3 rounded bg-warning hide">
+            <div>
+              <h5>Результаты поиска:</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="col-sm">
+      <h3 class="text-center">Списки групп</h3>
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              Группы 1 класса
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 1).forEach(function(group) { %>
+                  <li">
+                    <a class="" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        Филиал: <%= group.branch %>&nbsp;
+                        Язык: <%= group.language %>&nbsp;
+                        Кол-во учеников: <%= group.group_students_count %>
+                    </a>
+                  </li>
+                  <hr>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Группы 2 класса
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 2).forEach(function(group) { %>
+                  <li">
+                    <a class="" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        Филиал: <%= group.branch %>&nbsp;
+                        Язык: <%= group.language %>&nbsp;
+                        Кол-во учеников: <%= group.group_students_count %>
+                    </a>
+                  </li>
+                  <hr>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              Группы 3 класса
+            </button>
+          </h2>
+          <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 3).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+              Группы 4 класса
+            </button>
+          </h2>
+          <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 4).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFive">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+              Группы 5 класса
+            </button>
+          </h2>
+          <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 5).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingSix">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+              Группы 6 класса
+            </button>
+          </h2>
+          <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 6).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingSeven">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+              Группы 7 класса
+            </button>
+          </h2>
+          <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 7).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                  <hr>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingEight">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+              Группы 8 класса
+            </button>
+          </h2>
+          <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 8).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                  <hr>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingNine">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
+              Группы 9 класса
+            </button>
+          </h2>
+          <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 9).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTen">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
+              Группы 10 класса
+            </button>
+          </h2>
+          <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 10).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingElev">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseElev" aria-expanded="true" aria-controls="collapseElev">
+              Группы 11 класса
+            </button>
+          </h2>
+          <div id="collapseElev" class="accordion-collapse collapse" aria-labelledby="headingElev" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ol>
+                <% groups.filter((group) => group.class_number == 11).forEach(function(group) { %>
+                  <li">
+                    <a class="d-flex" href=<%= `${globalLink}/groups/${group.group_id}` %>>
+                      <strong><%= group.group_name %>&nbsp;&nbsp;</strong>
+                        <p>Филиал: <%= group.branch %>&nbsp;</p>
+                        <p>Язык: <%= group.language %>&nbsp;</p>
+                        <p>Кол-во учеников: <%= group.group_students_count %></p>
+                    </a>
+                  </li>
+                <% }); %>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <% if(user.role == 'admin' || user.role == 'assistant'){ %>
+      <div class="students__content">
+        <h5>Управление учениками</h5>
+        <a href="<%= globalLink%>/students/" class="btn btn-secondary my-2">
+          Перейти в базу учеников
+        </a>
+        <a href="<%= globalLink%>/students/new" class="btn btn-primary my-2">
+          Создать ученика
+        </a>
+        <a href="<%= globalLink%>/students/delete" class="btn btn-danger my-2">
+         Исключить ученика
+        </a>
+        <a href="<%= globalLink%>/students/reincarnate" class="btn btn-light my-2">
+          Восстановить ученика
+         </a>
+
+      </div>
+
+      <div class="groups__content">
+        <h5>Управление группами</h5>
+        <a href="<%= globalLink%>/groups/new" class="btn btn-primary my-2">
+        Создать группу
+        </a>
+        <a href="<%= globalLink%>/groups/update" class="btn btn-secondary my-2">
+          Редактировать группу
+          </a>
+
+        <a href="<%= globalLink%>/groups/remove" class="btn btn-danger my-2">
+          Деактивировать группу
+          </a>
+          <a href="<%= globalLink%>/groups/move" class="btn btn-warning my-2">
+            Перевести ученика в другую группу
+           </a>
+      </div>
+
+      <div class="groups__content">
+        <h5>Управление предметами</h5>
+        <a href="<%= globalLink%>/users/addnewsubject" class="btn btn-secondary my-2">
+        Создать предмет
+        </a>
+      </div>
+
+
+    <% } else { %>
+      <% } %>
+
+
+</div>
+
+
+
+<%- include ("../partials/footer.ejs") %>
+
+<script>
+
+const groupNameInput = document.querySelector('#group_name');
+const groupClassNumberInput = document.querySelector('#group_class_number');
+const groupBranchSelect = document.querySelector('#group_branch_select');
+const groupLangSelect = document.querySelector('#group_lang_select');
+const groupActiveSelect = document.querySelector('#group_active_select');
+const groupSearchSubmit = document.querySelector('#group_find_submit');
+
+const hideResultsButton = document.querySelector('#hide_results');
+
+const searchResultsBlock = document.querySelector('.search_results_block');
+
+groupSearchSubmit.addEventListener('click', async (event) => {
+  hideResultsButton.classList.remove('hide');
+  searchResultsBlock.classList.remove('hide');
+
+  searchResultsBlock.innerHTML = '<h5>Результаты поиска:</h5>';
+
+  const searchUrl = new URL(`<%= globalLink %>/groups/async/search/params?group_name=${groupNameInput.value}&class_number=${groupClassNumberInput.value}&branch=${groupBranchSelect.value}&lang=${groupLangSelect.value}&active=${groupActiveSelect.value}`);
+  const encodedUrl = encodeURI(searchUrl)
+
+const promise = await fetch(encodedUrl);
+const response = await promise.json();
+
+searchResultsBlock.innerHTML = `<h5>Результаты поиска:</h5>\n<h5>Найдено: ${response.searchResults.length}</h5>\n`
+
+  response.searchResults.forEach((result) => {
+    const groupButton = document.createElement('a');
+    groupButton.setAttribute('href', `<%= globalLink %>/groups/${result.group_id}/`);
+    groupButton.setAttribute('class', `btn btn-${result.active == true ? 'primary' : 'danger'} btn-sm m-1 p-1`)
+    groupButton.innerText = result.name;
+    searchResultsBlock.appendChild(groupButton);
+  });
+
+});
+
+const hideResults = () => {
+  searchResultsBlock.classList.add('hide');
+  hideResultsButton.classList.add('hide');
+};
+
+
+
+</script>

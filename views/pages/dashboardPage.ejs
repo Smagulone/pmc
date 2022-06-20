@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+</head>
+
+<%- include ("../partials/nav.ejs") %>
+<body>
+
+  <div class="container">
+    <div class="row mt-3 profile__content">
+        <% if(user.role == 'admin' ){ %>
+            <div class="col">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          Управление пользователями
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <a href=<%= `${globalLink}/users/new` %> class="btn btn-primary m-2 w-25">
+                            Добавить пользователя
+                          </a>
+                          <a href=<%= `${globalLink}/users/update` %> class="btn btn-secondary m-2">
+                            Редактировать пользователя
+                          </a>
+                          <a href=<%= `${globalLink}/users/delete` %> class="btn btn-danger m-2 w-25">
+                            Удалить пользователя
+                          </a>
+                          <hr>
+                          <h4 class="bold text-center mt-3">Список пользователей</h4>
+                            <p>Администраторы</p>
+                            <% users.filter((user) => user.role == "admin").forEach(function(user) { %>
+                                    <p class="btn btn-secondary btn-sm" title="<%= user.email %>"><%= user.username %></p>
+                            <% }); %>
+                            <p>Асистенты</p>
+                            <% users.filter((user) => user.role == "assistant").forEach(function(user) { %>
+                                    <p class="btn btn-secondary btn-sm" title="<%= user.email %>"><%= user.username %></p>
+                            <% }); %>
+                            <p>Тренера</p>
+                            <% users.filter((user) => user.role == "trainer").forEach(function(user) { %>
+                                    <p class="btn btn-secondary btn-sm" title="<%= user.email %>"><%= user.username %></p>
+                            <% }); %>
+                            <p>Менеджеры</p>
+                            <% users.filter((user) => user.role == "manager").forEach(function(user) { %>
+                                    <p class="btn btn-secondary btn-sm" title="<%= user.email %>"><%= user.username %></p>
+                            <% }); %>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+    <div class="row mt-3 profile__content">
+      <h2 class="text-center">Группы и ученики</h2>
+        <div class="col">
+            <p>Количество активных групп: <%= groups.length %></p>
+            <p>Количество активных учеников: <%= students.count %></p>
+            <div class="d-flex flex-column bg-info p-2 rounded shadow">
+              <p id="info_show">Количество посетивших учеников за выбранный период:</p>
+              <div class="d-flex my-2">
+                <input required type="date" class="form-control date_start mx-1 w-25">
+                <input required type="date" class="form-control date_end w-25">
+                <button class="get_visitors btn btn-primary m-1">
+                  Показать
+                </button>
+              </div>
+            </div>
+
+
+            <div class="d-flex flex-column bg-info p-2 my-2 rounded shadow">
+              <p id="reviews_count_show">Количество отправленных характеристик по предметам группы за выбранный период</p>
+              <div style="display: none;" class="group_subject_reviews border">
+
+              </div>
+              <div class="d-flex my-2 input_field_subject_reviews">
+                <input type="date" class="form-control reviews_start_date mx-1 w-25">
+                <input type="date" class="form-control reviews_end_date w-25">
+                <select class="group_count_select form-select w-25 mx-1">
+                  <% groups.forEach(function(group){ %>
+                    <option value="<%= group.group_id %>">
+                      <%= group.name %>
+                    </option>
+                    <% }); %>
+                </select>
+                <button class="get_reviews_count btn btn-primary m-1">
+                  Показать
+                </button>
+              </div>
+
+        </div>
+    </div>
+
+    <!-- <div class="row mt-3 profile__content">
+        <div class="col">
+            <p>Последние зарегестрированные тесты групп:</p>
+
+            <div class="table-responsive-lg">
+                <table class="table table-striped table-hover table-bordered border-primary">
+                  <tr>
+                    <th>Группа</th>
+                     <th>Дата проведения</th>
+                     <th>Предмет</th>
+                     <th style="max-width: 120px;">Количество сдающих</th>
+                     <th>Формат тестирования</th>
+                     <th>Максимум баллов</th>
+                     <th>Средний балл</th>
+                     <th>% от максимума</th>
+                  </tr>
+                  <% tests.forEach(function(test) { %>
+                  <tr>
+                    <th style="max-width: 150px;">
+                        <a href=<%= `${globalLink}/groups/${test.group_id}/` %> 
+                            class="w-75 group_link btn btn-warning my-2"
+                            title=<%= `${test.group_name}` %>>
+                       <%= test.group_name %>
+                        </a>
+                      </th>
+                      <th class="date"><%= test.date.toLocaleDateString('ru-RU') %></th>
+                      <th><%= test.subject_name %></th>
+                      <th style="max-width: 120px;" class="quantity"><%= test.count %></th>
+                      <th><%= test.format %></th>
+                      <th><%= test.max_points %></th>
+                      <th><%= Math.round(test.avg) %></th>
+                      <th class="percent"><%= Math.round(test.avg/ test.max_points * 100) %></th>
+
+                  </tr>
+                  <% }); %>
+               </table>
+              </div>
+
+
+        </div>
+    </div> -->
+
+
+</div>
+</body>
+
+<style>
+    .group_link {
+     white-space: nowrap; 
+     overflow: hidden; 
+     text-overflow: ellipsis; 
+    }
+   </style>
+
+<%- include ("../partials/footer.ejs") %>
+
+<script>
+
+const showVisitorsButton = document.querySelector('.get_visitors');
+const startDateInput = document.querySelector('.date_start');
+const endDateInput = document.querySelector('.date_end');
+
+showVisitorsButton.addEventListener('click', async (event) => {
+
+  if(startDateInput.value !== '' && endDateInput.value !=='') {
+    const promise = await fetch(`<%= globalLink %>/reviews/async/dashboard/${startDateInput.value}/${endDateInput.value}`)
+    const response = await promise.json();
+    const infoShow = document.querySelector('#info_show');
+    infoShow.innerHTML = `Количество посетивших учеников за выбранный период: <strong>${response.count}</strong>`;
+  } else {
+    alert('Вы не указали период!')
+  }
+
+});
+
+
+
+
+const showReviewsCountButton = document.querySelector('.get_reviews_count');
+const reviewsStartDateInput = document.querySelector('.reviews_start_date');
+const reviewsEndDateInput = document.querySelector('.reviews_end_date');
+const groupCountSelect = document.querySelector('.group_count_select');
+const responseBlock = document.querySelector('.group_subject_reviews');
+const subjectReviewsList = document.createElement('div');
+let isButtonGenerated = false;
+
+showReviewsCountButton.addEventListener('click', async (event) => {
+  responseBlock.innerHTML = '';
+  subjectReviewsList.remove();
+  if(reviewsStartDateInput.value !== '' && reviewsEndDateInput.value !== '') {
+    const promise = await fetch(`<%= globalLink %>/reviews/async/reviews_count/${groupCountSelect.value}/${reviewsStartDateInput.value}/${reviewsEndDateInput.value}`);
+    const response = await promise.json();
+    const groupReviewsCountShow = document.querySelector('.reviews_count_show');
+    console.log(response)
+
+    response.forEach((subject) => {
+      const subjectName = document.createElement('p');
+      subjectName.classList.add('fw-bold', 'm-1', 'btn', 'btn-primary', 'btn-sm', 'subject_btn_generated')
+      subjectName.innerText = `${subject.name}: ${subject.reviews.length}`
+      responseBlock.classList.add('d-flex', 'rounded', 'bg-warning', 'p-2', 'justify-content-around');
+      responseBlock.appendChild(subjectName);
+      isButtonGenerated = true;
+    });
+
+
+
+    if(isButtonGenerated) {
+      subjectReviewsList.classList.add('d-flex', 'p-2', 'flex-column', 'my-2', 'bg-light', 'rounded', 'shadow', 'reviews_list');
+      const subjectReviewsListDescr = document.createElement('p');
+      subjectReviewsListDescr.innerText = 'Список харак-к по выбранному предмету за указанные даты:'
+
+        const subjectBtnGenerated = Array.from(document.querySelectorAll('.subject_btn_generated'));
+        subjectBtnGenerated.forEach(async (el) => {
+
+          el.addEventListener('click', async (event) => {
+
+            subjectReviewsList.innerHTML = '';
+            subjectReviewsList.appendChild(subjectReviewsListDescr)
+
+            let index = Array.prototype.indexOf.call(responseBlock.children, event.target);
+            console.log(response[index])
+            responseBlock.parentElement.insertBefore(subjectReviewsList, document.querySelector('.input_field_subject_reviews'));
+            response[index].reviews.forEach((review) => {
+
+              const reviewElement = document.createElement('a')
+              reviewElement.setAttribute('href', `<%= globalLink %>/reviews/${review.review_id}`);
+              reviewElement.classList.add('btn', 'btn-secondary', 'btn-sm', 'w-25', 'my-1');
+              reviewElement.innerText = `Дата: ${new Date(review.posting_date).toLocaleDateString('ru-RU')}, день недели: ${new Date(review.posting_date).toLocaleString('ru', {weekday: 'long'})}`;
+              subjectReviewsList.appendChild(reviewElement);
+            })
+
+
+
+          });
+        });
+    }
+
+
+  } else {
+    alert('Вы не указали период!')
+  }
+
+});
+
+
+
+
+</script>

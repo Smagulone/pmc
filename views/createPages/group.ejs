@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+</head>
+
+<body>
+
+<%- include ("../partials/nav.ejs") %>
+
+<div class="container">
+    <div class="row  my-3">
+        <div class="col-lg-6 student__block">
+            <h4>Создать группу</h4>
+            <form action=<%= `${globalLink}/groups/new` %> method='POST'>
+              <div class="mb-1">
+                <label for="inputName" class="form-label">Название</label>
+                <div id="" class="form-text">Введите название группы</div>
+                <input name="name" type="text" class="form-control w-50" id="inputName" aria-describedby="NameHelp">
+              </div>
+              <div class="mb-3">
+                <label for="InputClassNumber" class="form-label">Класс</label>
+                <div id="" class="form-text">Укажите класс</div>
+                <input name="class_number" type="number" class="form-control w-50" id="InputClassNumber">
+              </div>
+              <div class="buttons d-flex flex-column justify-content-center mt-4">
+                <button type="submit" class="btn btn-primary my-2 w-50">Создать группу</button>
+                <a href="<%= `${globalLink}/users/profile/` %>" class="btn-profile btn btn-light w-50 mh-50">Вернуться в свой профиль</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <%- include ("../partials/footer.ejs") %>

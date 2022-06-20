@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+</head>
+
+<body>
+
+<%- include ("../partials/nav.ejs") %>
+
+<div class="container">
+  <div class="row  my-3">
+      <div class="col-lg-6 student__block p-3">
+        <div class="group__info flex-column my-2">
+          <h4>
+            Группа:  <%= group.name %>
+          </h4>
+          <h5>
+              Класс:
+              <%= group.class_number %>
+          </h5>
+      </div>
+      <hr>
+          <h4>Добавить группе предмет</h4>
+          <form action=<%= `${globalLink}/groups/${group.group_id}/addSubject` %> method='POST'>
+
+              <div class="subjects__list">
+
+                <label for="InputSubjects" class="form-label">Укажите предмет</label>
+                  <div class="subjects__add d-flex mb-4">
+                      <select name="subject" type="select" class="form-control w-50" id="InputSubjects">
+                        <option value="">Выберите предмет</option>
+                        <% availableSubjects.forEach(function(subject) { %>
+                          <option class="available__option" value="<%= subject.id %>">
+                            <%= subject.name %>
+                          </option>
+                          <% }); %>
+                        </select>
+                  </div>
+              </div>
+              <div class="buttons d-flex flex-column justify-content-center">
+                <button type="submit" class="btn btn-primary my-2 w-50">Добавить</button>
+                <a href="<%= `${globalLink}/users/profile/` %>" class="btn-profile btn btn-light w-50 mh-50">Вернуться в свой профиль</a>
+              </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+
+    <%- include ("../partials/footer.ejs") %>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include ("../partials/header.ejs") %>
+  <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+
+</head>
+
+<body>
+
+  <%- include ("../partials/nav.ejs") %>
+
+<div class="container">
+    <div class="row my-3 group__block">
+        <div class="col-lg-4 shadow p-3 m-3 rounded bg-secondary align-self-start text-warning">
+            <h4>Группа: <%= groupName %></h4>
+            <h4>Формат: <%= formatName %></h4>
+            <h4>Предмет: <%= subjectName %></h4>
+            <a href="<%= globalLink %>/groups/<%= groupId %>" class="btn btn-light p-3 shadow">
+                Вернуться на страницу группы
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="table-responsive-lg responsive table-responsive">
+            <table class="table table-striped table-hover table-bordered border-primary">        
+                <tbody>
+                    <tr>
+                        <th>
+                            Дата
+                        </th>
+                        <th>
+                            Максимум баллов
+                        </th>
+                        <% studentsNames.forEach(function(student) { %>
+                        <th class="student" id="<%= student.student_id %>">
+                            <%= student.name %>
+                        </th>    
+                        <% }); %>
+                    </tr>
+                    <% dates.forEach(function({test_date, max_points}) { %>
+                        <tr>
+                            <td class="date">
+                                <%= test_date.toLocaleDateString('ru-RU') %>
+                            </td>
+                            <td class="max_points">
+                                <%= max_points %>
+                            </td>
+                            <% studentsNames.forEach(function(student) { %>
+                                <td class="grade" ">
+                                    
+                                </td>    
+                                <% }); %>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-success w-25 my-3 mx-1 hide" id="btnExport" onclick="exportReportToExcel(this)">Скачать таблицу</button>
+        <div id="chart">
+        </div>
+        <hr>
+        <p class="text-center p-2 bg-light rounded shadow">
+          Методика расчета "Кривой успеваемости": <br>
+          Сложение всех оценок учеников согласно указанным процентным критериям 
+          успеваемости(по умолчанию: если > 89 = "5", > 69 = "4", >49 = "3")  / на кол-во учеников, 
+          писавших тест.
+        </p>
+        <hr>
+        <div id="grades_chart">
+        </div>
+    </div>
+</div>
+
+</body>
+
+<%- include ("../partials/footer.ejs") %>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const students = Array.from(document.querySelectorAll('.student'))
+    const dates = Array.from(document.querySelectorAll('.date'))
+
+    dates.forEach((date) => {
+        const tbody = date.parentElement.parentElement;
+        const dateTrBlock = date.parentElement;
+        let dateIndex = Array.prototype.indexOf.call(tbody.children, dateTrBlock);
+
+        students.forEach(async (student, i) => {
+            let studentIndexInTr = Array.prototype.indexOf.call(student.parentElement.children, student);
+            const promise = await fetch(`<%= globalLink %>/groups/<%= groupId %>/async/formats/<%= formatId %>/subjects/<%= subjectId %>/dates/${date.innerText}/students/${student.id}`);
+            const response = await promise.json();
+
+            if(response.results.length == 0) {
+                let nullData = '-';
+                tbody.children[dateIndex].children[studentIndexInTr].innerText = nullData;
+            } else {
+                let data = response.results[0].points;
+                tbody.children[dateIndex].children[studentIndexInTr].innerText = data;
+            }
+        });
+    });
+});
+
+
+
+let dates = <%- JSON.stringify(graphData.map((data) => data.test_date.toLocaleDateString('ru-RU'))) %>;
+let  averageGrade = <%- JSON.stringify(graphData.map((data) => Number(data.average_grade).toFixed(2) )) %>;
+let fourGrades = dates.map((date) => 4)
+var options = {
+  series: [
+  {
+    name: "Кривая успеваемости",
+    data: averageGrade,
+    type: 'line'
+  },
+  {
+    name: "Прямая качества",
+    data: fourGrades,
+    type: 'line'
+  },
+],
+  chart: {
+  type: 'line',
+  height: 350,
+  toolbar: {
+    show: false
+  }
+},
+colors: ['#5674ED', '	#D8583D', '#006200'],
+fill: {
+      colors: ['#D8583D']
+},
+dataLabels: {
+  enabled: true,
+},
+stroke: {
+  curve: 'smooth',
+},
+title: {
+  text: 'График успеваемости',
+  align: 'left'
+},
+markers: {
+  size: 3
+},
+xaxis: {
+  categories: dates,
+  title: {
+    text: 'Время'
+  },
+},
+yaxis: {
+  title: {
+    text: 'Средняя оценка'
+  },
+  min: 0,
+  max: 5,
+},
+legend: {
+  position: 'top',
+  horizontalAlign: 'right',
+  floating: true,
+  offsetY: -25,
+  offsetX: -5
+    }
+};
+
+var chart = new ApexCharts(document.querySelector("#chart"), options).render();
+
+//second chart
+const dates2 = <%- JSON.stringify(grades.map((date) => date.test_date.toLocaleDateString('ru-RU'))) %>;
+const five_count = <%- JSON.stringify(grades.map((data) => data.five_count)) %>;
+const four_count = <%- JSON.stringify(grades.map((data) => data.four_count)) %>;
+const three_count = <%- JSON.stringify(grades.map((data) => data.three_count)) %>;
+const two_count = <%- JSON.stringify(grades.map((data) => data.two_count)) %>;
+
+var options2 = {
+      series: [{
+      name: 'Отлично',
+      data: five_count
+    }, {
+      name: 'Хорошо',
+      data: four_count
+    }, {
+      name: 'Удовлетворительно',
+      data: three_count
+    }, {
+      name: 'Плохо',
+      data: two_count
+    },
+  ],
+  colors:['#5674ED', '#32CD32', '#FF00FF', '#E91E63'],
+      chart: {
+      type: 'bar',
+      height: 350,
+      stacked: true,
+      stackType: '100%'
+    },
+    fill: {
+colors: ['#5674ED', '#32CD32', '#FF00FF', '#E91E63']
+},
+    plotOptions: {
+      bar: {
+        horizontal: true,
+      },
+    },
+    title: {
+      text: 'Соотношение оценок'
+    },
+    xaxis: {
+      categories: dates2,
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return val
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'left',
+      offsetX: 40
+    }
+};
+
+        var chart2 = new ApexCharts(document.querySelector("#grades_chart"), options2);
+        chart2.render();
+      
+
+
+
+
+
+
+
+
+//second chart
+
+const buttonExport = document.querySelector('#btnExport')
+
+setTimeout(() => {
+  btnExport.classList.remove('hide');
+}, 5000)
+
+
+function exportReportToExcel(e) {
+  let table = document.querySelector('table')
+  let subjectName = `Таблица с веб-приложения`; // you can use document.getElementById('tableId') as well by providing id to the table tag
+  TableToExcel.convert(table, { // html code may contain multiple tables so here we are refering to 1st table tag
+    name: `${subjectName}.xlsx`, // fileName you could use any name
+    sheet: {
+      name: 'Sheet 1' // sheetName
+    }
+  });
+}
+</script>
